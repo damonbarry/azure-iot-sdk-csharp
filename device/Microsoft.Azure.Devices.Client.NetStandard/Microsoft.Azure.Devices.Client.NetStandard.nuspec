@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Microsoft.Azure.Devices.Client.NetStandard</id>
+    <version>1.0.0</version>
+    <title>Microsoft Azure Devices Client</title>
+    <authors>Microsoft Corp</authors>
+    <owners>Microsoft Corp</owners>
+    <licenseUrl>https://github.com/Azure/azure-iot-sdks/blob/master/LICENSE</licenseUrl>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Description</description>
+    <releaseNotes>initial version</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Microsoft Azure IoT IoTHub Device Client .net AMQP HTTP</tags>
+  </metadata>
+  <files>
+     <file src="bin\Release\Microsoft.Azure.Devices.Client.NetStandard.dll" target="lib\netstandard1.3\Microsoft.Azure.Devices.Client.NetStandard.dll" />
+     <file src="bin\Release\Microsoft.Azure.Devices.Client.NetStandard.xml" target="lib\netstandard1.3\Microsoft.Azure.Devices.Client.NetStandard.xml" />
+  </files>
+</package>
