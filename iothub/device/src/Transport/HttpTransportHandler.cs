@@ -40,12 +40,14 @@ namespace Microsoft.Azure.Devices.Client.Transport
 
         readonly IHttpClientHelper httpClientHelper;
         readonly string deviceId;
+        readonly string moduleId;
 
-        internal HttpTransportHandler(IPipelineContext context, IotHubConnectionString iotHubConnectionString, Http1TransportSettings transportSettings)
+        internal HttpTransportHandler(IPipelineContext context, IotHubConnectionString iotHubConnectionString, Http1TransportSettings transportSettings, HttpClientHandler httpClientHandler = null)
             :base(context, transportSettings)
         {
             ProductInfo productInfo = context.Get<ProductInfo>();
             this.deviceId = iotHubConnectionString.DeviceId;
+            this.moduleId = iotHubConnectionString.ModuleId;
             this.httpClientHelper = new HttpClientHelper(
                 iotHubConnectionString.HttpsEndpoint,
                 iotHubConnectionString,
@@ -53,6 +55,7 @@ namespace Microsoft.Azure.Devices.Client.Transport
                 DefaultOperationTimeout,
                 null,
                 transportSettings.ClientCertificate,
+                httpClientHandler,
                 productInfo);
         }
 

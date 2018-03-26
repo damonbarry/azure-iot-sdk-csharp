@@ -46,7 +46,8 @@ namespace Microsoft.Azure.Devices.Client
         public enum ReceivingLinkType {
             C2DMessages,
             Methods,
-            Twin
+            Twin,
+            Events
         };
 
         protected IotHubConnection(string hostName, int port, AmqpTransportSettings amqpTransportSettings)
@@ -151,6 +152,7 @@ namespace Microsoft.Azure.Devices.Client
             switch (linkType)
             {
                 case ReceivingLinkType.C2DMessages:
+                case ReceivingLinkType.Events:
                     linkSettings.SndSettleMode = null; // SenderSettleMode.Unsettled (null as it is the default and to avoid bytes on the wire)
                     linkSettings.RcvSettleMode = (byte)ReceiverSettleMode.Second;
                     break;
@@ -441,7 +443,7 @@ namespace Microsoft.Azure.Devices.Client
             {
                 TargetHost = this.hostName,
                 Certificate = null,
-                CertificateValidationCallback = OnRemoteCertificateValidation
+                CertificateValidationCallback = this.AmqpTransportSettings.RemoteCertificateValidationCallback ?? OnRemoteCertificateValidation
             };
 
             if (this.AmqpTransportSettings.ClientCertificate != null)

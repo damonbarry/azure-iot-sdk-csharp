@@ -46,6 +46,7 @@ namespace Microsoft.Azure.Devices.Client.Transport
             TimeSpan timeout,
             Action<HttpClient> preRequestActionForAllRequests,
             X509Certificate2 clientCert,
+            HttpClientHandler httpClientHandler,
             ProductInfo productInfo
             )
         {
@@ -64,6 +65,8 @@ namespace Microsoft.Azure.Devices.Client.Transport
             }
 
             this.httpClientObj = handler != null ? new HttpClient(handler) : new HttpClient();
+#elif NETSTANDARD1_3
+            this.httpClientObj = httpClientHandler != null ? new HttpClient(httpClientHandler) : new HttpClient();
 #else
             this.httpClientObj = new HttpClient();
 #endif

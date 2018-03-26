@@ -3,11 +3,9 @@
 
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Globalization;
 using System;
 using System.Diagnostics;
 using Microsoft.Azure.Amqp;
-using System.Threading;
 
 namespace Microsoft.Azure.Devices.Client.Test
 {
@@ -101,9 +99,7 @@ namespace Microsoft.Azure.Devices.Client.Test
         public async Task DeviceAuthenticationWithTokenRefresh_Populate_DefaultParameters_Ok()
         {
             var refresher = new TestImplementation(TestDeviceId);
-            var csBuilder = IotHubConnectionStringBuilder.Create(
-                TestIoTHubName,
-                new DeviceAuthenticationWithRegistrySymmetricKey(TestDeviceId, TestSharedAccessKey));
+            var csBuilder = IotHubConnectionStringBuilder.Create(TestIoTHubName, refresher);
 
             refresher.Populate(csBuilder);
 
@@ -121,59 +117,7 @@ namespace Microsoft.Azure.Devices.Client.Test
             Assert.AreEqual(null, csBuilder.SharedAccessKey);
             Assert.AreEqual(null, csBuilder.SharedAccessKeyName);
         }
-
-        [TestMethod]
-        public void DeviceAuthenticationWithTokenRefresh_Populate_InvalidConnectionStringBuilder_Fail()
-        {
-            var refresher = new TestImplementation(TestDeviceId);
-            TestAssert.Throws<ArgumentNullException>(() => refresher.Populate(null));
-        }
-
-        [TestMethod]
-        public async Task DeviceAuthenticationWithTokenRefresh_GetTokenAsync_ConcurrentUpdate_Ok()
-        {
-            var refresher = new TestImplementation(TestDeviceId);
-
-            var tasks = new Task[5];
-            for (int i = 0; i < tasks.Length; i++)
-            {
-                tasks[i] = refresher.GetTokenAsync(TestIoTHubName);
-            }
-
-            await Task.WhenAll(tasks);
-
-            Assert.AreEqual(1, refresher.SafeCreateNewTokenCallCount);
-        }
-
-        [TestMethod]
-        public async Task DeviceAuthenticationWithTokenRefresh_GetTokenAsync_NewTtl_Ok()
-        {
-            int ttl = 1;
-
-            var refresher = new TestImplementation(TestDeviceId, ttl, 90);
-            await refresher.GetTokenAsync(TestIoTHubName);
-
-            DateTime expectedExpiryTime = DateTime.UtcNow.AddSeconds(ttl);
-            int timeDelta = (int)((refresher.ExpiresOn - expectedExpiryTime).TotalSeconds);
-            Assert.IsTrue(Math.Abs(timeDelta) < 3, $"Expiration time delta is {timeDelta}");
-
-            // Wait for the token to expire;
-            while (!refresher.IsExpiring)
-            {
-                await Task.Delay(100);
-            }
-
-            // Configure the test token refresher to ignore the suggested TTL.
-            ttl = 10;
-            refresher.ActualTimeToLive = ttl;
-
-            await refresher.GetTokenAsync(TestIoTHubName);
-
-            expectedExpiryTime = DateTime.UtcNow.AddSeconds(ttl);
-            timeDelta = (int)((refresher.ExpiresOn - expectedExpiryTime).TotalSeconds);
-            Assert.IsTrue(Math.Abs(timeDelta) < 3, $"Expiration time delta is {timeDelta}");
-        }
-
+        
         [TestMethod]
         public async Task DeviceAuthenticationWithSakRefresh_SharedAccessKeyConnectionString_HasRefresher()
         {
@@ -232,7 +176,7 @@ namespace Microsoft.Azure.Devices.Client.Test
             public TestImplementation(
                 string deviceId,
                 int suggestedTimeToLive,
-                int timeBufferPercentage) 
+                int timeBufferPercentage)
                 : base(deviceId, suggestedTimeToLive, timeBufferPercentage)
             {
             }
