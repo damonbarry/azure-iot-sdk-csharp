@@ -265,6 +265,26 @@ namespace Microsoft.Azure.Devices.Client
         }
 
         /// <summary>
+        /// The "traceparent" header that is part of the context propagated with the message,
+        /// used by distributed tracing systems.
+        /// </summary>
+        public string TraceParent
+        {
+            get => GetSystemProperty<string>(MessageSystemPropertyNames.TraceParent);
+            set => SystemProperties[MessageSystemPropertyNames.TraceParent] = value;
+        }
+
+        /// <summary>
+        /// The "tracestate" header that is part of the context propagated with the message,
+        /// used by distributed tracing systems.
+        /// </summary>
+        public string TraceState
+        {
+            get => GetSystemProperty<string>(MessageSystemPropertyNames.TraceState);
+            set => SystemProperties[MessageSystemPropertyNames.TraceState] = value;
+        }
+
+        /// <summary>
         /// Gets the dictionary of user properties which are set when user send the data.
         /// </summary>
         public IDictionary<string, string> Properties { get; private set; }
