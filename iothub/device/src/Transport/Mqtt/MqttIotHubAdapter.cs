@@ -1083,6 +1083,8 @@ namespace Microsoft.Azure.Devices.Client.Transport.Mqtt
             public const string MqttDiagCorrelationContextKey = "$.diagctx";
             public const string InterfaceId = "$.ifid";
             public const string ComponentName = "$.sub";
+            public const string TraceParent = "$.traceparent";
+            public const string TraceState = "$.tracestate";
         }
 
         private static readonly Dictionary<string, string> s_toSystemPropertiesMap = new Dictionary<string, string>
@@ -1102,7 +1104,9 @@ namespace Microsoft.Azure.Devices.Client.Transport.Mqtt
             {IotHubWirePropertyNames.ConnectionModuleId, MessageSystemPropertyNames.ConnectionModuleId },
             {IotHubWirePropertyNames.MqttDiagIdKey, MessageSystemPropertyNames.DiagId},
             {IotHubWirePropertyNames.MqttDiagCorrelationContextKey, MessageSystemPropertyNames.DiagCorrelationContext},
-            {IotHubWirePropertyNames.InterfaceId, MessageSystemPropertyNames.InterfaceId}
+            {IotHubWirePropertyNames.InterfaceId, MessageSystemPropertyNames.InterfaceId},
+            {IotHubWirePropertyNames.TraceParent, MessageSystemPropertyNames.TraceParent},
+            {IotHubWirePropertyNames.TraceState, MessageSystemPropertyNames.TraceState}
         };
 
         private static readonly Dictionary<string, string> s_fromSystemPropertiesMap = new Dictionary<string, string>
@@ -1122,7 +1126,9 @@ namespace Microsoft.Azure.Devices.Client.Transport.Mqtt
             {MessageSystemPropertyNames.DiagId, IotHubWirePropertyNames.MqttDiagIdKey},
             {MessageSystemPropertyNames.DiagCorrelationContext, IotHubWirePropertyNames.MqttDiagCorrelationContextKey},
             {MessageSystemPropertyNames.InterfaceId, IotHubWirePropertyNames.InterfaceId},
-            {MessageSystemPropertyNames.ComponentName,IotHubWirePropertyNames.ComponentName }
+            {MessageSystemPropertyNames.ComponentName,IotHubWirePropertyNames.ComponentName },
+            {MessageSystemPropertyNames.TraceParent, IotHubWirePropertyNames.TraceParent},
+            {MessageSystemPropertyNames.TraceState, IotHubWirePropertyNames.TraceState}
         };
 
         private static string ConvertFromSystemProperties(object systemProperty)
